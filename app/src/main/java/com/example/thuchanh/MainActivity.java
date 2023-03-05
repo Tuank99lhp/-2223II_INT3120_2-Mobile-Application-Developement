@@ -1,5 +1,6 @@
 package com.example.thuchanh;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -22,6 +23,7 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -84,9 +86,13 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id)
+        {
+            case R.id.menuReport:
+                startActivity(new Intent(this, Report.class));
+                break;
+            case R.id.action_settings:
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -109,4 +115,5 @@ public class MainActivity extends AppCompatActivity {
         Log.v("Donate", "Donate Pressed! with amount " + amount + ", method: " + method);
         Log.v("Donate", "Current total " + totalDonated);
     }
+
 }

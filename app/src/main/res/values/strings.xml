@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Thuc Hanh</string>
+    <string name="app_name">Donation 2.0</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -12,4 +12,7 @@
     <string name="direct">Direct</string>
     <string name="donateTitle">Welcome homer</string>
     <string name="donateSubtitle">Please Give Generously</string>
+    <string name="menuReport">Report</string>
+    <string name="reportTitle">Report</string>
+    <string name="menuDonate">Donate</string>
 </resources>
