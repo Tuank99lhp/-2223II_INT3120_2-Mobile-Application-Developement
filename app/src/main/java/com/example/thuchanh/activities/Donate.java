@@ -1,11 +1,10 @@
-package com.example.thuchanh;
+package com.example.thuchanh.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.thuchanh.R;
+import com.example.thuchanh.models.Donation;
 import com.google.android.material.snackbar.Snackbar;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 import android.view.View;
@@ -17,15 +16,15 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.thuchanh.databinding.ActivityMainBinding;
 
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class Donate extends Base {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
@@ -33,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private RadioGroup paymentMethod;
     private ProgressBar progressBar;
     private NumberPicker amountPicker;
-    private int totalDonated = 0;
+    private EditText amountText;
+    private TextView amountTotal;
 
 
     @Override
@@ -66,36 +66,13 @@ public class MainActivity extends AppCompatActivity {
         paymentMethod = (RadioGroup) findViewById(R.id.paymentMethod);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         amountPicker = (NumberPicker) findViewById(R.id.amountPicker);
+        amountText = (EditText) findViewById(R.id.paymentAmount);
+        amountTotal = (TextView) findViewById(R.id.totalSoFar);
 
         amountPicker.setMinValue(0);
         amountPicker.setMaxValue(1000);
         progressBar.setMax(10000);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        switch (id)
-        {
-            case R.id.menuReport:
-                startActivity(new Intent(this, Report.class));
-                break;
-            case R.id.action_settings:
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        amountTotal.setText("$0");
     }
 
     @Override
@@ -107,13 +84,28 @@ public class MainActivity extends AppCompatActivity {
 
     public void donateButtonPressed (View view)
     {
-        int amount = amountPicker.getValue();
-        int radioId = paymentMethod.getCheckedRadioButtonId();
-        totalDonated = totalDonated + amount;
-        progressBar.setProgress(totalDonated);
-        String method = radioId == R.id.PayPal ? "PayPal" : "Direct";
-        Log.v("Donate", "Donate Pressed! with amount " + amount + ", method: " + method);
-        Log.v("Donate", "Current total " + totalDonated);
+        String method = paymentMethod.getCheckedRadioButtonId() == R.id.PayPal ?
+                "PayPal" : "Direct";
+        if (paymentMethod.getCheckedRadioButtonId() == R.id.PayPal) {
+            method = "PayPal";
+        } else if (paymentMethod.getCheckedRadioButtonId() == R.id.Direct) {
+            method = "Direct";
+        } else {
+            Toast.makeText(this, "Please choose method", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        int donatedAmount = amountPicker.getValue();
+        if (donatedAmount == 0) {
+            String text = amountText.getText().toString();
+            if (!text.equals(""))
+                donatedAmount = Integer.parseInt(text);
+        }
+        if (donatedAmount > 0) {
+            newDonation(new Donation(donatedAmount, method));
+            progressBar.setProgress(totalDonated);
+            String totalDonatedStr = "$" + totalDonated;
+            amountTotal.setText(totalDonatedStr);
+        }
     }
 
 }
