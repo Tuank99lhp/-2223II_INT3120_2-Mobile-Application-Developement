@@ -7,6 +7,7 @@ import com.example.thuchanh.models.Donation;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -72,7 +73,9 @@ public class Donate extends Base {
         amountPicker.setMinValue(0);
         amountPicker.setMaxValue(1000);
         progressBar.setMax(10000);
-        amountTotal.setText("$0");
+        progressBar.setProgress(app.totalDonated);
+        String totalDonatedStr = "$" + app.totalDonated;
+        amountTotal.setText(totalDonatedStr);
     }
 
     @Override
@@ -101,11 +104,19 @@ public class Donate extends Base {
                 donatedAmount = Integer.parseInt(text);
         }
         if (donatedAmount > 0) {
-            newDonation(new Donation(donatedAmount, method));
-            progressBar.setProgress(totalDonated);
-            String totalDonatedStr = "$" + totalDonated;
+            app.newDonation(new Donation(donatedAmount, method));
+            progressBar.setProgress(app.totalDonated);
+            String totalDonatedStr = "$" + app.totalDonated;
             amountTotal.setText(totalDonatedStr);
         }
+    }
+    public void reset(MenuItem item)
+    {
+        app.dbManager.reset();
+        app.totalDonated = 0;
+        progressBar.setProgress(app.totalDonated);
+        String totalDonatedStr = "$" + app.totalDonated;
+        amountTotal.setText(totalDonatedStr);
     }
 
 }
